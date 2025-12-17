@@ -1,0 +1,6 @@
+openai-whisper
+ollama
+presidio-analyzer
+presidio-anonymizer
+spacy
+gTTS
