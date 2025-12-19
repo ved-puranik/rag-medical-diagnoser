@@ -9,6 +9,16 @@ env/
 ENV/
 .venv
 
+# RAG Vector Database (generated, should not be committed)
+medi-backend/rag_vector_db/
+medi-rag/my_vector_db/
+
+# Temporary files
+medi-backend/temp_*.mp3
+medi-backend/temp_rag_*.pdf
+medi-backend/*_audio.mp3
+medi-backend/test_audio.mp3
+
 # Audio files (optional - uncomment if you don't want to track test audio)
 # *.mp3
 # *.wav
@@ -22,4 +32,8 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Node modules
+node_modules/
+.next/
 

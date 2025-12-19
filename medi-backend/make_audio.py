@@ -2,8 +2,7 @@ from gtts import gTTS
 import os
 
 # The script will say this out loud into an MP3 file
-text = "Hello, my name is John Smith. My phone number is 555-0199. I have a severe pain in my left knee and I need a prescription for ibuprofen."
-
+text = "Hi, this is Sarah Connor calling from Los Angeles. I started feeling chest palpitations last Tuesday. My date of birth is August 12th, 1985."
 print("Generating audio file...")
 tts = gTTS(text, lang='en')
 tts.save("test_audio.mp3")

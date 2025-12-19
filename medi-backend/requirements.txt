@@ -4,3 +4,15 @@ presidio-analyzer
 presidio-anonymizer
 spacy
 gTTS
+# RAG Dependencies
+langchain
+langchain-community
+langchain-ollama
+langchain-classic
+langchain-text-splitters
+langchain-core
+chromadb
+pypdf
+fastapi
+uvicorn
+python-multipart
