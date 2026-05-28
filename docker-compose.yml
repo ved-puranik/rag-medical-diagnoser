@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Medi-Diagnoser — Docker Compose
+#
+# PREREQUISITES (host machine):
+#   Ollama must be running natively — it is NOT containerised here.
+#   The backend container reaches it via http://host.docker.internal:11434
+#   which Docker resolves to the host machine's loopback adapter.
+#
+#   Pull the required models before running `docker compose up`:
+#     ollama pull llama3
+#     ollama pull nomic-embed-text
+#
+# QUICK START:
+#   docker compose up --build
+#
+# ACCESS:
+#   Frontend  →  http://localhost:3000
+#   API docs  →  http://localhost:8000/docs
+#
+# PERSISTENT DATA:
+#   ./medi-backend/data/ is bind-mounted into the backend container.
+#   Destroying containers does NOT destroy data.
+#   Run `docker compose down && rm -rf medi-backend/data/` to start fresh.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Python FastAPI backend ──────────────────────────────────────────────────
+  medi-backend:
+    build:
+      context: ./medi-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Single bind-mount covers both the SQLite database and ChromaDB index.
+      # Docker creates ./medi-backend/data/ on the host if it does not exist.
+      - ./medi-backend/data:/app/data
+    environment:
+      # Route ollama.chat() calls to the host machine's Ollama daemon.
+      # The ollama Python client reads this variable automatically.
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      # On macOS/Windows Docker Desktop this alias is built-in.
+      # On Linux it must be mapped explicitly to the container gateway IP.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/rag/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s   # leave time for Whisper + Presidio to load on cold boot
+
+  # ── Next.js frontend ────────────────────────────────────────────────────────
+  medi-frontend:
+    build:
+      context: ./medi-frontend
+      dockerfile: Dockerfile
+      args:
+        # Baked into the JS bundle at build time.
+        # API calls are made by the user's browser, so localhost:8000 resolves
+        # to the host machine where port 8000 is exposed by the backend service.
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      medi-backend:
+        condition: service_healthy
+    restart: unless-stopped

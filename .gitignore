@@ -9,11 +9,14 @@ env/
 ENV/
 .venv
 
-# RAG Vector Database (generated, should not be committed)
+# Runtime data (SQLite DB + ChromaDB vector store)
+medi-backend/data/
+# Legacy paths (pre-Docker refactor)
 medi-backend/rag_vector_db/
+medi-backend/medi_scribe.db
 medi-rag/my_vector_db/
 
-# Temporary files
+# Temporary processing files
 medi-backend/temp_*.mp3
 medi-backend/temp_rag_*.pdf
 medi-backend/*_audio.mp3

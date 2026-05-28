@@ -13,6 +13,9 @@ langchain-text-splitters
 langchain-core
 chromadb
 pypdf
+# API / Server
 fastapi
 uvicorn
 python-multipart
+# Database
+sqlalchemy
