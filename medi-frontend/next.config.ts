@@ -1,8 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  // Produces a self-contained ./next/standalone directory for Docker deployment.
-  output: "standalone",
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
